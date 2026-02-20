@@ -52,38 +52,6 @@ export class CdrEntity {
   @Column({ type: 'varchar', length: 255 })
   userfield!: string;
 
-@AfterInsert()
-  async enviarCorreoSiFalla() {
-    if (this.disposition !== 'ANSWERED') {
-      
-      const transporter = nodemailer.createTransport({
-        host: 'mail.ipv6-informatica.es',
-        port: 465,                   // 👈 Puerto SSL común en Zimbra (o usa 587)
-        secure: true,                // 👈 true para puerto 465, false para 587
-        auth: {
-          user: 'dsebasgonzalez@ipv6-informatica.es',
-          pass: 'Davckom2019#'
-        },
-        tls: {
-          rejectUnauthorized: false // 👈 Importante si el certificado de Zimbra es propio/interno
-        }
-      });
-
-      const mailOptions = {
-        from: '"Alertas Asterisk" <tu_usuario@dominio.com>',
-        to: 'dsebasgonzalez@ipv6-informatica.es',
-        subject: `⚠️ Llamada Perdida: ${this.disposition}`,
-        text: `Alerta: La llamada de ${this.src} hacia ${this.dst} no fue contestada. Estado: ${this.disposition}`
-      };
-
-      try {
-        await transporter.sendMail(mailOptions);
-        console.log('✅ Correo enviado vía Zimbra');
-      } catch (error) {
-        console.error('❌ Error en Zimbra:', error);
-      }
-    }
-  }
 
 }
 
